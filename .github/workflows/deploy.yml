@@ -14,8 +14,8 @@ env:
   AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
   AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
   AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-  AZURE_RG_NAME: "my-rg"          # change to your resource group
-  AZURE_LOCATION: "westeurope"    # must be a valid Azure region
+  AZURE_RG_NAME: "iac01"          # change to your resource group
+  AZURE_LOCATION: "swedencentral"    # must be a valid Azure region
 
 jobs:
   deploy:
