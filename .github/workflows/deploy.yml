@@ -35,7 +35,6 @@ jobs:
         uses: Azure/bicep-deploy@v2
         with:
           name: "iac-deploy-${{ github.run_id }}"
-          location: ${{ env.AZURE_LOCATION }}
           type: "deployment"
           operation: "create"
           scope: "resourceGroup"
@@ -43,4 +42,3 @@ jobs:
           subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
           template-file: "infra/main.bicep"
           parameters-file: "infra/main.parameters.json"
-          what-if: "false"
