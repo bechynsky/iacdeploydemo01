@@ -1,0 +1,45 @@
+name: Deploy Bicep to Azure (OIDC)
+
+on:
+  push:
+    paths:
+      - "infra/*.bicep"
+      - "infra/*.parameters.json"
+
+permissions:
+  id-token: write     # required for OIDC
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+  AZURE_RG_NAME: "my-rg"          # change to your resource group
+  AZURE_LOCATION: "westeurope"    # must be a valid Azure region
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Bicep to resource group
+        uses: Azure/bicep-deploy@v2
+        with:
+          name: "iac-deploy-${{ github.run_id }}"
+          location: ${{ env.AZURE_LOCATION }}
+          type: "deployment"
+          operation: "create"
+          scope: "resourceGroup"
+          resource-group-name: ${{ env.AZURE_RG_NAME }}
+          template-file: "infra/main.bicep"
+          parameters-file: "infra/main.parameters.json"
+          what-if: "false"
