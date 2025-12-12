@@ -40,6 +40,7 @@ jobs:
           operation: "create"
           scope: "resourceGroup"
           resource-group-name: ${{ env.AZURE_RG_NAME }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
           template-file: "infra/main.bicep"
           parameters-file: "infra/main.parameters.json"
           what-if: "false"
