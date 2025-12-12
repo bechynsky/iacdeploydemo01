@@ -1,0 +1,43 @@
+name: Bicep What-If
+
+on:
+  push:
+    paths:
+      - "infra/*.bicep"
+      - "infra/*.parameters.json"
+
+permissions:
+  id-token: write     # required for OIDC
+  contents: read
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_RG_NAME: "iac01"
+
+jobs:
+  whatif:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run What-If deployment
+        uses: Azure/bicep-deploy@v2
+        with:
+          name: "iac-whatif-${{ github.run_id }}"
+          type: "deployment"
+          operation: "whatIf"
+          scope: "resourceGroup"
+          resource-group-name: ${{ env.AZURE_RG_NAME }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          template-file: "infra/main.bicep"
+          parameters-file: "infra/main.parameters.json"
