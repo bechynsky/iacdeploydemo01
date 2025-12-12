@@ -4,6 +4,6 @@
   "parameters": {
     "location": { "value": "westeurope" },
     "vnetName": { "value": "vnet-training-01" },
-    "addressSpace": { "value": "10.10.0.0/16" }
+    "addressSpace": { "value": "10.20.0.0/16" }
   }
 }
