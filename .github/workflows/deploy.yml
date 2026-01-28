@@ -1,9 +1,7 @@
 name: Deploy Bicep to Azure (OIDC)
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
     paths:
       - "infra/*.bicep"
       - "infra/*.parameters.json"
